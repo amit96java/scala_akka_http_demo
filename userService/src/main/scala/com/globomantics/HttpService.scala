@@ -9,6 +9,11 @@ import com.typesafe.config.Config
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success}
+object HttpService {
+
+  def run(config: Config, serviceRoutes: Route)(implicit system: ActorSystem, mat: Materializer) =
+    new HttpService(config, serviceRoutes)
+}
 
 class HttpService private (config: Config, routes: Route)
                           (implicit system: ActorSystem, materializer: Materializer) {
@@ -31,10 +36,4 @@ class HttpService private (config: Config, routes: Route)
       logger.error(s"Server could not start: ${e.getMessage}")
       system.terminate()
   }
-}
-
-object HttpService {
-
-  def run(config: Config, serviceRoutes: Route)(implicit system: ActorSystem, mat: Materializer) =
-    new HttpService(config, serviceRoutes)
 }
