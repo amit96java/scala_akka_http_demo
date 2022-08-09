@@ -3,17 +3,23 @@ package com.globomantics.routes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.globomantics.persistence.Model._
-import com.globomantics.services.{UserService, _}
+import com.globomantics.services._
 import org.slf4j.{Logger, LoggerFactory}
+
+object DefineRoutes {
+  def post(uri: String) = {
+
+  }
+}
 
 class UserRoutes(userService: UserService) {
 
   val logger: Logger = LoggerFactory.getLogger(getClass)
 
-  final val userAPI = "user"
+//  final val userAPI = "user"
 
   val routes: Route =
-    pathPrefix(userAPI){
+    pathPrefix("user") {
       concat(
         pathEndOrSingleSlash {
           concat(
@@ -24,14 +30,14 @@ class UserRoutes(userService: UserService) {
               respondWith(userService.all)
             },
 
-            (post & entity(as[User])){user =>
+            (post & entity(as[User])) { user =>
               logger.info("POST request for create user with id {}", user.id)
 
               respondWith(userService.create(user))
             }
           )
         },
-        pathPrefix(JavaUUID){ id =>
+        pathPrefix(JavaUUID) { id =>
           concat(
             pathEndOrSingleSlash {
               concat(
